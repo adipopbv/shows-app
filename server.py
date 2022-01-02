@@ -14,7 +14,12 @@ def run_operator(connection):
     connection = connection
     while not shutdown_event.is_set():
         message = connection.recv()
-        connection.send(shutdown_event.is_set())
+        if shutdown_event.is_set():
+            connection.send('end')
+        else:
+            # do operation
+            connection.send('success')
+            connection.send('failure')
         print(message)
 
 

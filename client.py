@@ -8,7 +8,7 @@ if __name__ == '__main__':
     while True:
         connection.send('something')
         message = connection.recv()
-        if message is True:
+        if message is 'end':
             connection.close()
             break
         sleep(int(sys.argv[1]))
