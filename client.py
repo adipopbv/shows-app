@@ -6,6 +6,7 @@ if __name__ == '__main__':
 
     connection = Client(('localhost', 6000))
     while True:
+        # [show_id, seats_count, [seat_1, ...]]
         connection.send('something')
         message = connection.recv()
         if message is 'end':

@@ -3,6 +3,7 @@ from multiprocessing.connection import Listener, Client
 from concurrent.futures import ThreadPoolExecutor, ALL_COMPLETED
 from threading import Thread, Event
 import concurrent
+import services as services
 
 
 shutdown_event = Event()
@@ -16,9 +17,12 @@ def run_operator(connection):
         message = connection.recv()
         if shutdown_event.is_set():
             connection.send('end')
-        else:
-            # do operation
+            return
+        try:
+            show_id, seats_count, seats = message
+            services.sell_tickets(show_id, seats_count, seats)
             connection.send('success')
+        except Exception:
             connection.send('failure')
         print(message)
 
