@@ -8,6 +8,20 @@ class SqliteRepository:
     def __init__(self):
         self._connection = sqlite3.connect('shows-app.db', check_same_thread=False)
 
+    def reset_data(self):
+        self._connection.cursor().execute("delete from sold_seats")
+        self._connection.cursor().execute("delete from sqlite_sequence where name='sold_seats'")
+
+        self._connection.cursor().execute("delete from sales")
+        self._connection.cursor().execute("delete from sqlite_sequence where name='sales'")
+
+        self._connection.cursor().execute("update shows set available_seats_count = 100, balance = 0")
+
+        self._connection.commit()
+
+    def close_connection(self):
+        self._connection.close()
+
 
 class SqliteShowsRepository(SqliteRepository):
     def get(self, show_id: int) -> Show:
@@ -23,12 +37,48 @@ class SqliteShowsRepository(SqliteRepository):
                 row[2],
                 row[3],
                 Room(
-                    row[5],
-                    row[6]
-                )
+                    row[7],
+                    row[8]
+                ),
+                row[5],
+                row[6]
             )
         except Exception as e:
             raise Exception('error getting show')
+
+    def get_all(self) -> list:
+        try:
+            shows = []
+            for row in self._connection.cursor().execute('''select * from shows sh
+                                                       inner join rooms ro
+                                                       on sh.room_id = ro.room_id'''):
+                shows.append(
+                    Show(
+                        row[0],
+                        row[1],
+                        row[2],
+                        row[3],
+                        Room(
+                            row[7],
+                            row[8]
+                        ),
+                        row[5],
+                        row[6]
+                    ))
+            return shows
+        except Exception:
+            raise Exception("error getting all shows")
+
+    def update(self, show_id: int, seats_count: int, tickets_value: int) -> None:
+        try:
+            self._connection.cursor().execute('''update shows
+                                                 set available_seats_count = available_seats_count - ?,
+                                                 balance = balance + ?
+                                                 where show_id = ?''',
+                                              (seats_count, tickets_value, show_id))
+            self._connection.commit()
+        except Exception:
+            raise Exception("error update show")
 
 
 class SqliteSalesRepository(SqliteRepository):
@@ -50,9 +100,11 @@ class SqliteSalesRepository(SqliteRepository):
                     row[5],
                     row[6],
                     Room(
-                        row[7],
-                        row[8]
-                    )
+                        row[10],
+                        row[11]
+                    ),
+                    row[8],
+                    row[9]
                 )
             )
         except Exception:
@@ -97,9 +149,11 @@ class SqliteSoldSeatsRepository(SqliteRepository):
                                 row[8],
                                 row[9],
                                 Room(
-                                    row[11],
-                                    row[12]
-                                )
+                                    row[13],
+                                    row[14]
+                                ),
+                                row[11],
+                                row[12]
                             )
                         )
                     )
