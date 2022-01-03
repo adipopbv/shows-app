@@ -25,6 +25,9 @@ def sell_seats(show_id: int, seats_count: int, seats_numbers: list) -> None:
             if wanted_seat_number == sold_seat.seat_number:
                 raise Exception('seat already taken')
 
-    sales_repo.add(datetime.now(), show)
+    sale_id = sales_repo.add(datetime.now(), show)
+    sale = sales_repo.get(sale_id)
+    for wanted_seat_number in seats_numbers:
+        sold_seats_repo.add(wanted_seat_number, sale)
 
     lock.release()
