@@ -1,4 +1,4 @@
-import sys
+import random
 from time import sleep
 
 if __name__ == '__main__':
@@ -6,10 +6,18 @@ if __name__ == '__main__':
 
     connection = Client(('localhost', 6000))
     while True:
-        # [show_id, seats_count, [seat_1, ...]]
-        connection.send('something')
+        show_id = random.randint(1, 3)
+        seats_count = random.randint(1, 100)
+        seats_numbers = []
+        for seat_number in random.sample(range(0, 100), seats_count):
+            seats_numbers.append(seat_number)
+
+        message = [show_id, seats_count, seats_numbers]
+        print(f'sending: {message}')
+        connection.send(message)
         message = connection.recv()
-        if message is 'end':
+        print(message)
+        if message == 'end':
             connection.close()
             break
-        sleep(int(sys.argv[1]))
+        sleep(2)
