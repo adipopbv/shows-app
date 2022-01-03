@@ -19,12 +19,14 @@ def run_operator(connection):
             connection.send('end')
             return
         try:
-            show_id, seats_count, seats = message
-            services.sell_tickets(show_id, seats_count, seats)
+            show_id, seats_count, seats_numbers = message
+            print(f'selling seats: ${message}')
+            services.sell_seats(show_id, seats_count, seats_numbers)
+            print('success')
             connection.send('success')
-        except Exception:
-            connection.send('failure')
-        print(message)
+        except Exception as e:
+            print(f'error: ${str(e)}')
+            connection.send(f'error: ${str(e)}')
 
 
 def run_dispatcher():
