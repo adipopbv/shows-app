@@ -9,12 +9,14 @@ class Room:
 
 class Show:
     def __init__(self, show_id: int, show_date: datetime, title: str, ticket_price: int,
-                 room: Room):
+                 room: Room, available_seats_count: int, balance: int):
         self.show_id = show_id
         self.show_date = show_date
         self.title = title
         self.ticket_price = ticket_price
         self.room = room
+        self.available_seats_count = available_seats_count
+        self.balance = balance
 
 
 class Sale:
