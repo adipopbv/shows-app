@@ -27,7 +27,6 @@ def run_operator(connection):
         except Exception as e:
             print(f'error: {str(e)}')
             connection.send(f'error: {str(e)}')
-    # connection.close()
 
 
 def run_dispatcher():
@@ -57,4 +56,4 @@ if __name__ == '__main__':
     thread.join()
     verification_thread.join()
     concurrent.futures.wait(operators, timeout=None, return_when=ALL_COMPLETED)
-    services.reset_databse()
+    services.reset_database()

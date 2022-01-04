@@ -74,6 +74,6 @@ def verify_sells():
     file.close()
 
 
-def reset_databse():
+def reset_database():
     repo.reset_data()
     repo.close_connection()
