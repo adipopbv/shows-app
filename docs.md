@@ -10,6 +10,8 @@
 ### Solutions
 
 - using `threading.Lock` in the `sell_seats` service when adding new sales and sold seats to the database
+- using `transactions` by default on sqlite database operations
+- implementing `future/promises` by using `execute` from `ThreadPoolExecutor`  
 
 ## Diagrams & docs
 
